@@ -138,7 +138,7 @@ if (siteOpenedTime) {
     const openedAt = parseInt(siteOpenedTime, 10);
     const diffInMinutes = (now - openedAt) / (1000 * 60); // ms to minutes
 
-    if (diffInMinutes < 1) {
+    if (diffInMinutes < 30) {
         // 30 minutes complete nahi hue
         document.body.innerHTML = "<h2>Sorry! Aap abhi site use nahi kar sakte. 30 minutes ka wait karein.</h2>";
     } else {
