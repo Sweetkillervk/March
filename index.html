@@ -154,5 +154,21 @@ if (siteOpenedTime) {
     
     
   </script>
+	  <script>
+    // Disable text selection
+  document.addEventListener('selectstart', function(e) {
+      e.preventDefault();
+  });
+  
+  // Disable right-click
+  document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+  });
+  
+  // Disable drag events (to prevent dragging content)
+  document.addEventListener('dragstart', function(e) {
+      e.preventDefault();
+  });
+	  </script>
 </body>
 </html>
