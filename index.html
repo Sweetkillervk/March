@@ -1,174 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Quiz</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Email + PIN Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f5f5f5;
+        }
+        h2 {
+            color: #333;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input {
+            padding: 10px;
+            margin-right: 10px;
+            width: 250px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            background-color: white;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        .no-data {
+            color: red;
+        }
+        .highlight {
+            background-color: #d1ffd1;
+        }
+    </style>
 </head>
 <body>
-	
-	<button style="position:fixed; top:0;"><a href="https://whatsapp.com/channel/0029Va5CBTIA89Me0BqefE2W">for any problem please click here</a></button><br>
-<!--
-  <a class="buttonglow" href="answer.html" style="--color:#ff1867;">
-    <span></span><span></span><span></span><span></span>Aswer pdf🧾
-  </a>
-  -->
-  <!-- Login Form -->
-  <div id="loginForm">
-    <h2>Student Login</h2>
-    <label for="studentName">Name:</label>
-    <input type="text" id="studentName" required><br><br>
 
-    <label for="studentEmail">Email:</label>
-    <input type="email" id="studentEmail" required><br><br>
+    <h2 style="text-align: center; color: blue;">SMART KYP - Result Search</h2>
+    <h3>Search Result by Email & PIN</h3>
 
-    <label for="learnerCode">Village:</label>
-    <input type="text" id="learnerCode" required><br><br>
-
-    <button id="loginButton">Login</button>
-    
-
-  </div>
-
-  <!-- Quiz Section -->
-  <div id="quizSection" style="display: none;">
-    <div class="quiz-container">
-      <div class="quiz-header">
-        <h2 id="question">Question will appear here</h2>
-        <div id="timer" class="timer">15</div>
-        <ul>
-          <li>
-            <input type="radio" name="answer" id="a" class="answer" />
-            <label for="a" id="a_text">Answer A</label>
-          </li>
-          <li>
-            <input type="radio" name="answer" id="b" class="answer" />
-            <label for="b" id="b_text">Answer B</label>
-          </li>
-          <li>
-            <input type="radio" name="answer" id="c" class="answer" />
-            <label for="c" id="c_text">Answer C</label>
-          </li>
-          <li>
-            <input type="radio" name="answer" id="d" class="answer" />
-            <label for="d" id="d_text">Answer D</label>
-          </li>
-        </ul>
-      </div>
-      <button id="submit">Submit</button>
-    </div>
-  </div>
-
-  <!-- Marksheet Section -->
-  <div id="marksheet" style="display: none;">
-    <h2>Marksheet</h2>
-    <form id="marksheetForm">
-      <label for="marksheetName">Name:</label>
-      <input type="text" id="marksheetName" readonly><br><br>
-
-      <label for="marksheetEmail">Email:</label>
-      <input type="text" id="marksheetEmail" readonly><br><br>
-
-      <label for="marksheetCode">village:</label>
-      <input type="text" id="marksheetCode" readonly><br><br>
-
-      <label for="marksheetScore" style="opacity:0;">Score:</label>
-      <input type="text" id="marksheetScore" readonly style="opacity:0;"><br><br>
-
-      <button id="saveMarksheetButton" type="button">show marksheet</button>
-      <button id="resetButton" type="button" style="opacity:0;">Start New Quiz</button>
+    <form id="searchForm">
+        <input type="email" id="emailInput" placeholder="Enter your email" required>
+        <input type="text" id="pinInput" placeholder="Enter 4-digit PIN" required pattern="\d{4}">
+        <button type="submit">Search</button>
     </form>
-  </div>
 
-  <!-- Student Records Table -->
-  <div id="studentRecords" style="display: none; opacity: 0;">
-    <h2 style="color:red;">Result</h2>
-    <table id="studentTable" border="1">
-      <thead>
-        <tr style="color:rgb(123, 255, 0);">
-          <th style="color: #fff;">Name</th>
-          <th style="color: #fff;">Email</th>
-          <th style="color: #fff;">Learner Code</th>
-          <th style="color: #fff;">Score</th>
-        </tr>
-      </thead>
-      <tbody id="studentTableBody" style="color: greenyellow; justify-content: center;">
-        <!-- Student records will be dynamically appended here -->
-      </tbody>
-    </table>
-  </div>
+    <div id="top3Container">
+        <h3>🏆 Top 3 Students</h3>
+        <div id="top3"></div>
+    </div>
 
-  <script src="script.js"></script>
-  <script>
-    document.getElementById('saveMarksheetButton').addEventListener('click', function () {
-      var name = document.getElementById('marksheetName').value;
-      var email = document.getElementById('marksheetEmail').value;
-      var learnerCode = document.getElementById('marksheetCode').value;
-      var score = document.getElementById('marksheetScore').value;
+    <div id="result"></div>
 
-      // Data to send
-      var formData = new FormData();
-      formData.append('name', name);
-      formData.append('email', email);
-      formData.append('learnerCode', learnerCode);
-      formData.append('score', score);
+    <script>
+        const data = 
+                    [
+            
+  { "Name": "Raju Ranjan", "Email": "rajuranjan505kyp@gmail.com", "PIN": "9411", "Marks": "12 - 2 - 5 = 5" },
+  { "Name": "Pushpa kumari", "Email": "pphb678@gmail.com", "PIN": "8968", "Marks": "21 (20+ no negative marks)" },
+  { "Name": "Nilu kumari", "Email": "nilujee2024@gmail.com", "PIN": "9852", "Marks": "15" },
+  { "Name": "Prince kumar", "Email": "prncepkyadav1116@gmail.com", "PIN": "4202", "Marks": "21" },
+  { "Name": "Nicky kumari", "Email": "Nkum8888@gmail.com", "PIN": "4295", "Marks": "22 (20+ no negative marks)" },
+  { "Name": "Vishal Kumar", "Email": "kumarvishal@21217gmail.com", "PIN": "1183", "Marks": "15" },
+  { "Name": "Muskan patel", "Email": "muskanpatelm017@gmail.com", "PIN": "1214", "Marks": "22" },
+  { "Name": "Lalasa kumari", "Email": "ravikishan8928545036@gmail.com", "PIN": "2085", "Marks": "14 - 2 = 12" },
+  { "Name": "Aafrin praveen", "Email": "hb51kypaf@gmail.com", "PIN": "5802", "Marks": "22 (20+ no negative marks)" },
+  { "Name": "Gyani kumari", "Email": "Amank357256@gmail.com", "PIN": "2155", "Marks": "25" },
+  { "Name": "Khushi patel", "Email": "KHUSHI51KYPHSB@GMAIL.COM", "PIN": "5809", "Marks": "24" },
+  { "Name": "Priya kumari", "Email": "deepakkumar8298016156@gmail.com", "PIN": "1194", "Marks": "24" },
+  { "Name": "Aabha kumari", "Email": "abhakypshs@gmail.com", "PIN": "5582", "Marks": "33" },
+  { "Name": "Nisha kumari", "Email": "vazad62094@gmail.com", "PIN": "5426", "Marks": "13 - 2 = 11" },
+  { "Name": "anu kumari", "Email": "anu342340@gmail.com", "PIN": "1049", "Marks": "8 - 2 = 6" },
+  { "Name": "Khushbu khatun", "Email": "khushbukhatun0504@gmail.com", "PIN": "2651", "Marks": "10 - 2 - 5 = 3" },
+  { "Name": "Manish Kumar", "Email": "manishk58862@gmail.com", "PIN": "7029", "Marks": "17 - 2 - 5 = 10" },
+  { "Name": "Retu kumari", "Email": "kretu942@gmail.com", "PIN": "9852", "Marks": "15 - 2 = 13" },
+  { "Name": "Shweta Kumari", "Email": "ak82404466@gmail.com", "PIN": "9106", "Marks": "11 - 2 = 9" },
+  { "Name": "nandani kumari", "Email": "nandanikumarik99@gmail.com", "PIN": "3641", "Marks": "13 - 2 = 11" },
+  { "Name": "Alok kumar", "Email": "alokjamorhi802204@gmail.com", "PIN": "6289", "Marks": "10 - 2 - 5 = 3" },
+  { "Name": "Babita Kumari", "Email": "ms.babitakumari8084@gmail.com", "PIN": "8593", "Marks": "11 - 2 = 9" },
+  { "Name": "Dhiraj Kumar", "Email": "dhirajk95659@gmail.com", "PIN": "3900", "Marks": "19" },
+  { "Name": "Muskan kumari", "Email": "muskankri1523@gmail.com", "PIN": "6476", "Marks": "20" },
 
-      // Sending data to Google Sheets
-      fetch('https://script.google.com/macros/s/AKfycbydA0-XIneVPgkMeasUzjR_bhyiDEL5xyXMsEb_DYN9QVHFEfQiPcrmSElNZwi_rpgM/exec', {
-        method: 'POST',
-        body: formData
-      })
-      .then(response => response.text())
-      .then(data => {
-        alert(data); // Display success message
-        document.getElementById('marksheet').style.display = 'none';
-        document.getElementById('studentRecords').style.display = 'block';
-      })
-      .catch(error => alert('Error saving data: ' + error));
-    });
-    
-    
-    // Page load hone par
-const siteOpenedTime = localStorage.getItem('siteOpenedTime');
-const now = Date.now();
+  { Name: "Ragani kumari", Email: "us0594775@gmail.com", PIN: "9354", Marks: "28" },
+  { Name: "Mahi kumari", Email: "MKUAMRI939@Gmail.com", PIN: "5218", Marks: "21 (20+ no negative marks)" },
+  { Name: "Sanjana kumari", Email: "DEVISARITA5972@GMAIL.COM", PIN: "9370", Marks: "25 (20+ no negative marks)" },
+  { Name: "Anjali Kumari", Email: "vikashkumar272007@gmail.vom", PIN: "9096", Marks: "17 (mobile, no negative marks)" },
+  { Name: "Nitu kumari", Email: "nitukypshs@gmail.com", PIN: "5318", Marks: "8 - 2 - 5 = 1" },
+  { Name: "Sanju kumari", Email: "9304384843rinku@gmail.com", PIN: "5738", Marks: "21 (20+ no negative marks)" },
+  { Name: "Lovely", Email: "gudiya1983emk@gmail.com", PIN: "9156", Marks: "21 (20+ no negative marks)" },
+  { Name: "Nandanikumari", Email: "ashokkumar802205@gmail.com", PIN: "1724", Marks: "14" },
+  { Name: "Saurabh kumar", Email: "sairabhkr802204@gmail.com", PIN: "3234", Marks: "22 (20+ no negative marks)" },
+  { Name: "Sonam Kumari", Email: "Sohb6418@gmail.com", PIN: "1346", Marks: "17 - 2 - 5 = 10" },
+  { Name: "Amarjeet Kumar", Email: "AMARJEETKUMAR62042@GMAIL.COM", PIN: "9585", Marks: "20" },
+  { Name: "Anshu kumari", Email: "amankumar9199019@gmail.com", PIN: "5779", Marks: "16 - 2 - 5 = 9" },
+  { Name: "Santu kumar", Email: "ritikrajyadavr@gmail.com", PIN: "5211", Marks: "26" },
+  { Name: "Aman kumar", Email: "amanku23679@gmail.com", PIN: "8492", Marks: "23" },
+  { Name: "Muskan patel", Email: "mkhbky@gmil.com", PIN: "6261", Marks: "17 - 2 - 5 = 10" },
+  { Name: "Simran khatoon", Email: "sahilmobil99310@gmail.com", PIN: "4105", Marks: "12" },
+  { Name: "Nikhil Kumar", Email: "nikhilkumar35669@gmail.com", PIN: "9018", Marks: "20" },
+  { Name: "Priyanshu kumari", Email: "KKHB7636@GMAIL.COM", PIN: "8938", Marks: "26" },
+  { Name: "Ritu kumari", Email: "DHANNU802212@GMAIL.COM", PIN: "7398", Marks: "23" },
+  { Name: "prem kumar", Email: "premkypshskyp@gmail.com", PIN: "5449", Marks: "15 - 2 - 5 = 8" },
+  { Name: "Vibha Kumari", Email: "PANKAj37347@GMAIL.com", PIN: "7266", Marks: "15 (mobile, no negative marks)" }
 
-if (siteOpenedTime) {
-    const openedAt = parseInt(siteOpenedTime, 10);
-    const diffInMinutes = (now - openedAt) / (1000 * 60); // ms to minutes
 
-    if (diffInMinutes < 30) {
-        // 30 minutes complete nahi hue
-        document.body.innerHTML = "<h2>Sorry! Aap abhi site use nahi kar sakte. 30 minutes ka wait karein.</h2>";
-    } else {
-        // 30 minutes ho gaye, naya time save karo
-        localStorage.setItem('siteOpenedTime', now.toString());
-        // Site normal chalegi
-    }
-} else {
-    // First time visit
-    localStorage.setItem('siteOpenedTime', now.toString());
-    // Site normal chalegi
-}
-    
-    
-  </script>
-	  <script>
-    // Disable text selection
-  document.addEventListener('selectstart', function(e) {
-      e.preventDefault();
-  });
-  
-  // Disable right-click
-  document.addEventListener('contextmenu', function(e) {
-      e.preventDefault();
-  });
-  
-  // Disable drag events (to prevent dragging content)
-  document.addEventListener('dragstart', function(e) {
-      e.preventDefault();
-  });
-	  </script>
+
+            ];
+
+
+        // Show top 3 on page load
+        const top3Div = document.getElementById("top3");
+        const top3 = [...data].sort((a, b) => parseInt(b.Marks) - parseInt(a.Marks)).slice(0, 3);
+        const top3Table = createTable(top3);
+        top3Div.appendChild(top3Table);
+
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('emailInput').value.trim().toLowerCase();
+            const pin = document.getElementById('pinInput').value.trim();
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '';
+
+            const filteredData = data.filter(item =>
+                item.Email.toLowerCase() === email && item.PIN === pin
+            );
+
+            if (filteredData.length > 0) {
+                const table = createTable(filteredData);
+                resultDiv.appendChild(table);
+            } else {
+                resultDiv.innerHTML = `<p class="no-data">No matching record found for this Email and PIN.</p>`;
+            }
+        });
+
+        function createTable(dataSet) {
+            const table = document.createElement('table');
+            const headerRow = document.createElement('tr');
+            for (let key in dataSet[0]) {
+                const th = document.createElement('th');
+                th.innerText = key;
+                headerRow.appendChild(th);
+            }
+            table.appendChild(headerRow);
+
+            dataSet.forEach(item => {
+                const row = document.createElement('tr');
+                for (let key in item) {
+                    const td = document.createElement('td');
+                    td.innerText = item[key];
+                    row.appendChild(td);
+                }
+                table.appendChild(row);
+            });
+
+            return table;
+        }
+    </script>
+
 </body>
 </html>
