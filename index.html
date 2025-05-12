@@ -1,84 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Email + PIN Search</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            background-color: #f5f5f5;
-        }
-        h2 {
-            color: #333;
-        }
-        form {
-            margin-bottom: 20px;
-        }
-        input {
-            padding: 10px;
-            margin-right: 10px;
-            width: 250px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        table {
-            border-collapse: collapse;
-            width: 80%;
-            background-color: white;
-            margin-top: 20px;
-        }
-        th, td {
-            padding: 12px;
-            border: 1px solid #ccc;
-            text-align: left;
-        }
-        th {
-            background-color: #007bff;
-            color: white;
-        }
-        .no-data {
-            color: red;
-        }
-        .highlight {
-            background-color: #d1ffd1;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>Email + PIN Search</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f5f5f5;
+    }
+    h2 {
+      color: #333;
+      text-align: center;
+      color: blue;
+    }
+    form {
+      margin-bottom: 20px;
+    }
+    input {
+      padding: 10px;
+      margin-right: 10px;
+      width: 250px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    table {
+      border-collapse: collapse;
+      width: 80%;
+      background-color: white;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 12px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+    th {
+      background-color: #007bff;
+      color: white;
+    }
+    .no-data {
+      color: red;
+    }
+    .highlight {
+      background-color: #d1ffd1;
+    }
+  </style>
 </head>
 <body>
 
-    <h2 style="text-align: center; color: blue;">SMART KYP - Result Search</h2>
-    <h3>Search Result by Email & PIN</h3>
+  <h2>SMART KYP - Result Search</h2>
+  <h3>Search Result by Email & PIN</h3>
 
-    <form id="searchForm">
-        <input type="email" id="emailInput" placeholder="Enter your email" required>
-        <input type="text" id="pinInput" placeholder="Enter 4-digit PIN" required pattern="\d{4}">
-        <button type="submit">Search</button>
-    </form>
+  <form id="searchForm">
+    <input type="email" id="emailInput" placeholder="Enter your email" required />
+    <input type="text" id="pinInput" placeholder="Enter 4-digit PIN" required pattern="\d{4}" />
+    <button type="submit">Search</button>
+  </form>
 
-    <div id="top3Container">
-        <h3>🏆 Top 3 Students</h3>
-        <div id="top3"></div>
-    </div>
+  <div id="top4Container">
+    <h3>🏆 Top 4 Students</h3>
+    <div id="top4"></div>
+  </div>
 
-    <div id="result"></div>
+  <div id="result"></div>
 
-    <script>
-        const data = 
-                    [
-            
-  { "Name": "Raju Ranjan", "Email": "rajuranjan505kyp@gmail.com", "PIN": "9411", "Marks": "12 - 2 - 5 = 5" },
+  <script>
+    const data = [
+        { "Name": "Raju Ranjan", "Email": "rajuranjan505kyp@gmail.com", "PIN": "9411", "Marks": "12 - 2 - 5 = 5" },
   { "Name": "Pushpa kumari", "Email": "pphb678@gmail.com", "PIN": "8968", "Marks": "21 (20+ no negative marks)" },
   { "Name": "Nilu kumari", "Email": "nilujee2024@gmail.com", "PIN": "9852", "Marks": "15" },
   { "Name": "Prince kumar", "Email": "prncepkyadav1116@gmail.com", "PIN": "4202", "Marks": "21" },
@@ -126,58 +126,67 @@
   { Name: "Vibha Kumari", Email: "PANKAj37347@GMAIL.com", PIN: "7266", Marks: "15 (mobile, no negative marks)" }
 
 
+    ];
 
-            ];
+    function extractNumber(markStr) {
+      const match = markStr.match(/(\d+)/g);
+      if (!match) return 0;
+      let num = 0;
+      try {
+        const expr = markStr.replace(/[^\d\+\-\*\/ ]/g, '');
+        num = eval(expr);
+      } catch (e) {
+        num = parseInt(match[0]);
+      }
+      return num;
+    }
 
+    function showTop4() {
+      const sorted = [...data].sort((a, b) => extractNumber(b.Marks) - extractNumber(a.Marks));
+      const top4 = sorted.slice(0, 4);
+      const table = `
+        <table>
+          <thead>
+            <tr><th>Rank</th><th>Name</th><th>Email</th><th>Marks</th></tr>
+          </thead>
+          <tbody>
+            ${top4.map((student, i) => `
+              <tr>
+                <td>${i + 1}</td>
+                <td>${student.Name}</td>
+                <td>${student.Email}</td>
+                <td>${student.Marks}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>`;
+      document.getElementById("top4").innerHTML = table;
+    }
 
-        // Show top 3 on page load
-        const top3Div = document.getElementById("top3");
-        const top3 = [...data].sort((a, b) => parseInt(b.Marks) - parseInt(a.Marks)).slice(0, 3);
-        const top3Table = createTable(top3);
-        top3Div.appendChild(top3Table);
+    function searchStudent(email, pin) {
+      const resultDiv = document.getElementById("result");
+      const student = data.find(s => s.Email.toLowerCase() === email.toLowerCase() && s.PIN === pin);
+      if (student) {
+        resultDiv.innerHTML = `
+          <table>
+            <tr><th>Name</th><td>${student.Name}</td></tr>
+            <tr><th>Email</th><td>${student.Email}</td></tr>
+            <tr><th>Marks</th><td>${student.Marks}</td></tr>
+          </table>`;
+      } else {
+        resultDiv.innerHTML = `<p class="no-data">No matching record found!</p>`;
+      }
+    }
 
-        document.getElementById('searchForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('emailInput').value.trim().toLowerCase();
-            const pin = document.getElementById('pinInput').value.trim();
-            const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = '';
+    document.getElementById("searchForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const email = document.getElementById("emailInput").value.trim();
+      const pin = document.getElementById("pinInput").value.trim();
+      searchStudent(email, pin);
+    });
 
-            const filteredData = data.filter(item =>
-                item.Email.toLowerCase() === email && item.PIN === pin
-            );
-
-            if (filteredData.length > 0) {
-                const table = createTable(filteredData);
-                resultDiv.appendChild(table);
-            } else {
-                resultDiv.innerHTML = `<p class="no-data">No matching record found for this Email and PIN.</p>`;
-            }
-        });
-
-        function createTable(dataSet) {
-            const table = document.createElement('table');
-            const headerRow = document.createElement('tr');
-            for (let key in dataSet[0]) {
-                const th = document.createElement('th');
-                th.innerText = key;
-                headerRow.appendChild(th);
-            }
-            table.appendChild(headerRow);
-
-            dataSet.forEach(item => {
-                const row = document.createElement('tr');
-                for (let key in item) {
-                    const td = document.createElement('td');
-                    td.innerText = item[key];
-                    row.appendChild(td);
-                }
-                table.appendChild(row);
-            });
-
-            return table;
-        }
-    </script>
-
+    // Show top 4 on load
+    showTop4();
+  </script>
 </body>
 </html>
