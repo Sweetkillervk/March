@@ -74,8 +74,11 @@
 
     <div id="result"></div>
 
-    <script>
-        const data = [
+   
+        
+
+        <script>
+   const data = [
   { "Name": "Nandani kumari", "Email": "nandanikumarik99@gmail.com", "Code": "3641", "Marks": "15" },
   { "Name": "Anjali kumari", "Email": "anjalikypshs@gmail.com", "Code": "9499", "Marks": "15" },
   { "Name": "Priya kumari", "Email": "shivanishivi6366@gmail.com", "Code": "7108", "Marks": "25" },
@@ -134,54 +137,63 @@
   { "Name": "Suchitra kumari", "Email": "sksksksk555555@gmail.com", "Code": "7480", "Marks": "16" }
         ];
 
-        // Show top 3 on page load
-        const top3Div = document.getElementById("top3");
-        const top3 = [...data].sort((a, b) => parseInt(b.Marks) - parseInt(a.Marks)).slice(0, 3);
-        const top3Table = createTable(top3);
-        top3Div.appendChild(top3Table);
+    // Display Top 3 Students on page load
+    const top3Div = document.getElementById("top3");
+    const top3 = [...data]
+        .sort((a, b) => parseInt(b.Marks) - parseInt(a.Marks))
+        .slice(0, 3);
+    const top3Table = createTable(top3);
+    top3Div.appendChild(top3Table);
 
-        document.getElementById('searchForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('emailInput').value.trim().toLowerCase();
-            const pin = document.getElementById('pinInput').value.trim();
-            const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = '';
+    // Handle search form submission
+    document.getElementById('searchForm').addEventListener('submit', function(e) {
+        e.preventDefault();
 
-            const filteredData = data.filter(item =>
-                item.Email.toLowerCase() === email && item.PIN === pin
-            );
+        const emailInput = document.getElementById('emailInput').value.trim().toLowerCase();
+        const pinInput = document.getElementById('pinInput').value.trim();
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML = '';
 
-            if (filteredData.length > 0) {
-                const table = createTable(filteredData);
-                resultDiv.appendChild(table);
-            } else {
-                resultDiv.innerHTML = `<p class="no-data">No matching record found for this Email and PIN.</p>`;
+        const matchedResults = data.filter(entry =>
+            entry.Email.toLowerCase() === emailInput && entry.Code === pinInput
+        );
+
+        if (matchedResults.length > 0) {
+            const resultTable = createTable(matchedResults);
+            resultDiv.appendChild(resultTable);
+        } else {
+            resultDiv.innerHTML = `<p class="no-data">No matching record found for this Email and PIN.</p>`;
+        }
+    });
+
+    // Helper function to generate HTML table from data array
+    function createTable(dataSet) {
+        const table = document.createElement('table');
+        const headerRow = document.createElement('tr');
+
+        // Create table headers
+        for (let key in dataSet[0]) {
+            const th = document.createElement('th');
+            th.innerText = key;
+            headerRow.appendChild(th);
+        }
+        table.appendChild(headerRow);
+
+        // Populate table rows
+        dataSet.forEach(record => {
+            const row = document.createElement('tr');
+            for (let key in record) {
+                const td = document.createElement('td');
+                td.innerText = record[key];
+                row.appendChild(td);
             }
+            table.appendChild(row);
         });
 
-        function createTable(dataSet) {
-            const table = document.createElement('table');
-            const headerRow = document.createElement('tr');
-            for (let key in dataSet[0]) {
-                const th = document.createElement('th');
-                th.innerText = key;
-                headerRow.appendChild(th);
-            }
-            table.appendChild(headerRow);
+        return table;
+    }
+</script>
 
-            dataSet.forEach(item => {
-                const row = document.createElement('tr');
-                for (let key in item) {
-                    const td = document.createElement('td');
-                    td.innerText = item[key];
-                    row.appendChild(td);
-                }
-                table.appendChild(row);
-            });
-
-            return table;
-        }
-    </script>
 
 </body>
 </html>
